@@ -1,0 +1,5 @@
+pandoc test.md -o test.pdf
+
+pandoc Number\ Of\ Digits\ of\ Factorial.md -o test5.pdf -V geometry:"top=.5cm, bottom=1.2cm, left=2cm, right=.5cm"
+
+always two line breaks before any list.

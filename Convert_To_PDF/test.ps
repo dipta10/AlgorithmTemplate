@@ -1,0 +1,1139 @@
+%!PS-Adobe-3.0
+%%BoundingBox: 24 24 571 818
+%%Title: Enscript Output
+%%For: Dipta Das
+%%Creator: GNU Enscript 1.6.6
+%%CreationDate: Sun Oct 28 13:58:58 2018
+%%Orientation: Portrait
+%%Pages: (atend)
+%%DocumentMedia: A4 595 842 0 () ()
+%%DocumentNeededResources: (atend)
+%%EndComments
+%%BeginProlog
+%%BeginResource: procset Enscript-Prolog 1.6 6
+%
+% Procedures.
+%
+
+/_S {	% save current state
+  /_s save def
+} def
+/_R {	% restore from saved state
+  _s restore
+} def
+
+/S {	% showpage protecting gstate
+  gsave
+  showpage
+  grestore
+} bind def
+
+/MF {	% fontname newfontname -> -	make a new encoded font
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  % insert only valid encoding vectors
+  encoding_vector length 256 eq {
+    newfont /Encoding encoding_vector put
+  } if
+
+  newfontname newfont definefont pop
+} def
+
+/MF_PS { % fontname newfontname -> -	make a new font preserving its enc
+  /newfontname exch def
+  /fontname exch def
+
+  /fontdict fontname findfont def
+  /newfont fontdict maxlength dict def
+
+  fontdict {
+    exch
+    dup /FID eq {
+      % skip FID pair
+      pop pop
+    } {
+      % copy to the new font dictionary
+      exch newfont 3 1 roll put
+    } ifelse
+  } forall
+
+  newfont /FontName newfontname put
+
+  newfontname newfont definefont pop
+} def
+
+/SF { % fontname width height -> -	set a new font
+  /height exch def
+  /width exch def
+
+  findfont
+  [width 0 0 height 0 0] makefont setfont
+} def
+
+/SUF { % fontname width height -> -	set a new user font
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF
+  /F-gs-user-font width height SF
+} def
+
+/SUF_PS { % fontname width height -> -	set a new user font preserving its enc
+  /height exch def
+  /width exch def
+
+  /F-gs-user-font MF_PS
+  /F-gs-user-font width height SF
+} def
+
+/M {moveto} bind def
+/s {show} bind def
+
+/Box {	% x y w h -> -			define box path
+  /d_h exch def /d_w exch def /d_y exch def /d_x exch def
+  d_x d_y  moveto
+  d_w 0 rlineto
+  0 d_h rlineto
+  d_w neg 0 rlineto
+  closepath
+} def
+
+/bgs {	% x y height blskip gray str -> -	show string with bg color
+  /str exch def
+  /gray exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    gray setgray
+    fill
+  grestore
+  x y M str s
+} def
+
+/bgcs { % x y height blskip red green blue str -> -  show string with bg color
+  /str exch def
+  /blue exch def
+  /green exch def
+  /red exch def
+  /blskip exch def
+  /height exch def
+  /y exch def
+  /x exch def
+
+  gsave
+    x y blskip sub str stringwidth pop height Box
+    red green blue setrgbcolor
+    fill
+  grestore
+  x y M str s
+} def
+
+% Highlight bars.
+/highlight_bars {	% nlines lineheight output_y_margin gray -> -
+  gsave
+    setgray
+    /ymarg exch def
+    /lineheight exch def
+    /nlines exch def
+
+    % This 2 is just a magic number to sync highlight lines to text.
+    0 d_header_y ymarg sub 2 sub translate
+
+    /cw d_output_w cols div def
+    /nrows d_output_h ymarg 2 mul sub lineheight div cvi def
+
+    % for each column
+    0 1 cols 1 sub {
+      cw mul /xp exch def
+
+      % for each rows
+      0 1 nrows 1 sub {
+        /rn exch def
+        rn lineheight mul neg /yp exch def
+        rn nlines idiv 2 mod 0 eq {
+	  % Draw highlight bar.  4 is just a magic indentation.
+	  xp 4 add yp cw 8 sub lineheight neg Box fill
+	} if
+      } for
+    } for
+
+  grestore
+} def
+
+% Line highlight bar.
+/line_highlight {	% x y width height gray -> -
+  gsave
+    /gray exch def
+    Box gray setgray fill
+  grestore
+} def
+
+% Column separator lines.
+/column_lines {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h translate
+    /cw d_output_w cols div def
+    1 1 cols 1 sub {
+      cw mul 0 moveto
+      0 d_output_h rlineto stroke
+    } for
+  grestore
+} def
+
+% Column borders.
+/column_borders {
+  gsave
+    .1 setlinewidth
+    0 d_footer_h moveto
+    0 d_output_h rlineto
+    d_output_w 0 rlineto
+    0 d_output_h neg rlineto
+    closepath stroke
+  grestore
+} def
+
+% Do the actual underlay drawing
+/draw_underlay {
+  ul_style 0 eq {
+    ul_str true charpath stroke
+  } {
+    ul_str show
+  } ifelse
+} def
+
+% Underlay
+/underlay {	% - -> -
+  gsave
+    0 d_page_h translate
+    d_page_h neg d_page_w atan rotate
+
+    ul_gray setgray
+    ul_font setfont
+    /dw d_page_h dup mul d_page_w dup mul add sqrt def
+    ul_str stringwidth pop dw exch sub 2 div ul_h_ptsize -2 div moveto
+    draw_underlay
+  grestore
+} def
+
+/user_underlay {	% - -> -
+  gsave
+    ul_x ul_y translate
+    ul_angle rotate
+    ul_gray setgray
+    ul_font setfont
+    0 0 ul_h_ptsize 2 div sub moveto
+    draw_underlay
+  grestore
+} def
+
+% Page prefeed
+/page_prefeed {		% bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} def
+
+% Wrapped line markers
+/wrapped_line_mark {	% x y charwith charheight type -> -
+  /type exch def
+  /h exch def
+  /w exch def
+  /y exch def
+  /x exch def
+
+  type 2 eq {
+    % Black boxes (like TeX does)
+    gsave
+      0 setlinewidth
+      x w 4 div add y M
+      0 h rlineto w 2 div 0 rlineto 0 h neg rlineto
+      closepath fill
+    grestore
+  } {
+    type 3 eq {
+      % Small arrows
+      gsave
+        .2 setlinewidth
+        x w 2 div add y h 2 div add M
+        w 4 div 0 rlineto
+        x w 4 div add y lineto stroke
+
+        x w 4 div add w 8 div add y h 4 div add M
+        x w 4 div add y lineto
+	w 4 div h 8 div rlineto stroke
+      grestore
+    } {
+      % do nothing
+    } ifelse
+  } ifelse
+} def
+
+% EPSF import.
+
+/BeginEPSF {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack
+  userdict begin
+  /showpage { } def
+  0 setgray 0 setlinecap
+  1 setlinewidth 0 setlinejoin
+  10 setmiterlimit [ ] 0 setdash newpath
+  /languagelevel where {
+    pop languagelevel
+    1 ne {
+      false setstrokeadjust false setoverprint
+    } if
+  } if
+} bind def
+
+/EndEPSF {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+%%EndResource
+%%BeginResource: procset Enscript-Encoding-88591 1.6 6
+/encoding_vector [
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclam       	/quotedbl     	/numbersign   	
+/dollar       	/percent      	/ampersand    	/quoteright   	
+/parenleft    	/parenright   	/asterisk     	/plus         	
+/comma        	/hyphen       	/period       	/slash        	
+/zero         	/one          	/two          	/three        	
+/four         	/five         	/six          	/seven        	
+/eight        	/nine         	/colon        	/semicolon    	
+/less         	/equal        	/greater      	/question     	
+/at           	/A            	/B            	/C            	
+/D            	/E            	/F            	/G            	
+/H            	/I            	/J            	/K            	
+/L            	/M            	/N            	/O            	
+/P            	/Q            	/R            	/S            	
+/T            	/U            	/V            	/W            	
+/X            	/Y            	/Z            	/bracketleft  	
+/backslash    	/bracketright 	/asciicircum  	/underscore   	
+/quoteleft    	/a            	/b            	/c            	
+/d            	/e            	/f            	/g            	
+/h            	/i            	/j            	/k            	
+/l            	/m            	/n            	/o            	
+/p            	/q            	/r            	/s            	
+/t            	/u            	/v            	/w            	
+/x            	/y            	/z            	/braceleft    	
+/bar          	/braceright   	/tilde        	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/.notdef      	/.notdef      	/.notdef      	/.notdef      	
+/space        	/exclamdown   	/cent         	/sterling     	
+/currency     	/yen          	/brokenbar    	/section      	
+/dieresis     	/copyright    	/ordfeminine  	/guillemotleft	
+/logicalnot   	/hyphen       	/registered   	/macron       	
+/degree       	/plusminus    	/twosuperior  	/threesuperior	
+/acute        	/mu           	/paragraph    	/bullet       	
+/cedilla      	/onesuperior  	/ordmasculine 	/guillemotright	
+/onequarter   	/onehalf      	/threequarters	/questiondown 	
+/Agrave       	/Aacute       	/Acircumflex  	/Atilde       	
+/Adieresis    	/Aring        	/AE           	/Ccedilla     	
+/Egrave       	/Eacute       	/Ecircumflex  	/Edieresis    	
+/Igrave       	/Iacute       	/Icircumflex  	/Idieresis    	
+/Eth          	/Ntilde       	/Ograve       	/Oacute       	
+/Ocircumflex  	/Otilde       	/Odieresis    	/multiply     	
+/Oslash       	/Ugrave       	/Uacute       	/Ucircumflex  	
+/Udieresis    	/Yacute       	/Thorn        	/germandbls   	
+/agrave       	/aacute       	/acircumflex  	/atilde       	
+/adieresis    	/aring        	/ae           	/ccedilla     	
+/egrave       	/eacute       	/ecircumflex  	/edieresis    	
+/igrave       	/iacute       	/icircumflex  	/idieresis    	
+/eth          	/ntilde       	/ograve       	/oacute       	
+/ocircumflex  	/otilde       	/odieresis    	/divide       	
+/oslash       	/ugrave       	/uacute       	/ucircumflex  	
+/udieresis    	/yacute       	/thorn        	/ydieresis    	
+] def
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Courier
+/HFpt_w 10 def
+/HFpt_h 10 def
+/Courier-Bold /HF-gs-font MF
+/HF /HF-gs-font findfont [HFpt_w 0 0 HFpt_h 0 0] makefont def
+/Courier /F-gs-font MF
+/F-gs-font 10 10 SF
+/#copies 1 def
+% Pagedevice definitions:
+gs_languagelevel 1 gt {
+  <<
+    /PageSize [595 842] 
+  >> setpagedevice
+} if
+%%BeginResource: procset Enscript-Header-simple 1.6 6
+
+/do_header {	% print default simple header
+  gsave
+    d_header_x d_header_y HFpt_h 3 div add translate
+
+    HF setfont
+    user_header_p {
+      5 0 moveto user_header_left_str show
+
+      d_header_w user_header_center_str stringwidth pop sub 2 div
+      0 moveto user_header_center_str show
+
+      d_header_w user_header_right_str stringwidth pop sub 5 sub
+      0 moveto user_header_right_str show
+    } {
+      5 0 moveto fname show
+      45 0 rmoveto fmodstr show
+      45 0 rmoveto pagenumstr show
+    } ifelse
+
+  grestore
+} def
+%%EndResource
+/d_page_w 547 def
+/d_page_h 794 def
+/d_header_x 0 def
+/d_header_y 779 def
+/d_header_w 547 def
+/d_header_h 15 def
+/d_footer_x 0 def
+/d_footer_y 0 def
+/d_footer_w 547 def
+/d_footer_h 0 def
+/d_output_w 547 def
+/d_output_h 779 def
+/cols 1 def
+%%EndSetup
+%%Page: (1) 1
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (Prime Factorization #numbertheory.cpp) def
+/fdir (.) def
+/ftail (Prime Factorization #numbertheory.cpp) def
+% User defined strings:
+/fmodstr (Sun Oct 28 13:03:38 2018) def
+/pagenumstr (1) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(#include <bits/stdc++.h>) s
+5 744 M
+(using namespace std;) s
+5 711 M
+(int List[128];  // saves the List) s
+5 700 M
+(int listSize;   // saves the size of List) s
+5 689 M
+(bitset<10000> bs;) s
+5 678 M
+(vector<int> prime;) s
+5 656 M
+(void sieve\(long long upper_bound\) {) s
+5 645 M
+(    bs.set\(\);) s
+5 634 M
+(    bs[0] = bs[1] = 0;) s
+5 623 M
+(    prime.push_back\(2\);) s
+5 612 M
+(    for\(long long i = 3; i <= upper_bound + 1; i += 2\) {) s
+5 601 M
+(        if\(bs[i]\) {) s
+5 590 M
+(            for\(long long j = i * i; j <= upper_bound + 1; j += i\)) s
+5 579 M
+(                bs[j] = 0;) s
+5 568 M
+(            prime.push_back\(\(int\) i\);) s
+5 557 M
+(        }) s
+5 546 M
+(    }) s
+5 535 M
+(}) s
+5 513 M
+(void primeFactorize\( int n \) {) s
+5 502 M
+(    listSize = 0;   // Initially the List is empty, we denote that size = 0) s
+5 491 M
+(    int sqrtN = int\( sqrt\(n\) \); // find the sqrt of the number) s
+5 480 M
+(    sieve\(sqrtN + 1\);) s
+5 469 M
+(    int s = prime.size\(\);) s
+5 458 M
+(    for\( int i = 0; prime[i] <= sqrtN && i < s; i++ \) { // we check up to the sqrt) s
+5 447 M
+(        if\( n % prime[i] == 0 \) { // n is multiple of prime[i]) s
+5 436 M
+(            // So, we continue dividing n by prime[i] as long as possible) s
+5 425 M
+(            while\( n % prime[i] == 0 \) {) s
+5 414 M
+(                n /= prime[i]; // we have divided n by prime[i]) s
+5 403 M
+(                List[listSize] = prime[i]; // added the ith prime in the list) s
+5 392 M
+(                listSize++; // added a prime, so, size should be increased) s
+5 381 M
+(            }) s
+5 370 M
+(            // we can add some optimization by updating sqrtN here, since n) s
+5 359 M
+(            // is decreased. think why it's important and how it can be added) s
+5 348 M
+(        }) s
+5 337 M
+(    }) s
+5 326 M
+(    if\( n > 1 \) {) s
+5 315 M
+(        // n is greater than 1, so we are sure that this n is a prime) s
+5 304 M
+(        List[listSize] = n; // added n \(the prime\) in the list) s
+5 293 M
+(        listSize++; // increased the size of the list) s
+5 282 M
+(    }) s
+5 271 M
+(}) s
+5 249 M
+(int main\(\) {) s
+5 238 M
+(//    freopen\("input", "r", stdin\);) s
+5 227 M
+(    primeFactorize\(100\);) s
+5 216 M
+(    for \(int i = 0; i < listSize; ++i\) cout << List[i] << endl;) s
+5 172 M
+(    return 0;) s
+5 161 M
+(}) s
+_R
+S
+%%Page: (1) 2
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (Rod Cutting Problem #dynamicprogramming.cpp) def
+/fdir (.) def
+/ftail (Rod Cutting Problem #dynamicprogramming.cpp) def
+% User defined strings:
+/fmodstr (Sun Oct 28 13:36:26 2018) def
+/pagenumstr (1) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(/*) s
+5 755 M
+( * Rod Cutting Problem : Dynamic Programming) s
+5 744 M
+( * Given a rod of length n and an array of prices that contains prices of all pieces of s) s
+5 733 M
+(ize smaller than n. Determine the maximum value obtainable by cutting up the rod and sell) s
+5 722 M
+(ing the pieces. For example, if length of the rod is 8 and the values of different pieces) s
+5 711 M
+( are given as following, then the maximum obtainable value is 22 \(by cutting in two piece) s
+5 700 M
+(s of lengths 2 and 6\)) s
+5 689 M
+(    length   | 1   2   3   4   5   6   7   8) s
+5 678 M
+(    --------------------------------------------) s
+5 667 M
+(    price    | 1   5   8   9  10  17  17  20) s
+5 645 M
+(    And if the prices are as following, then the maximum obtainable value is 24 \(by cutti) s
+5 634 M
+(ng in eight pieces of length 1\)) s
+5 612 M
+(    length   | 1   2   3   4   5   6   7   8) s
+5 601 M
+(    --------------------------------------------) s
+5 590 M
+(    price    | 3   5   8   9  10  17  17  20) s
+5 579 M
+( */) s
+5 568 M
+(#include <bits/stdc++.h>) s
+5 546 M
+(using namespace std;) s
+5 524 M
+(int price[9] = {0, 1, 5, 8, 9, 10, 17, 17, 20};) s
+5 513 M
+(bool done[9];) s
+5 502 M
+(int value[9];) s
+5 480 M
+(void init\(\) {) s
+5 469 M
+(    for \(int i = 0; i < 9; ++i\) done[i] = false, value[i] = 0;) s
+5 458 M
+(}) s
+5 436 M
+(int cutRodRecursion1\(int n\) {) s
+5 425 M
+(    if \(n <= 0\) return 0;) s
+5 414 M
+(    int maxval = INT_MIN;) s
+5 403 M
+(    for \(int i = 1; i <= n; ++i\) {) s
+5 392 M
+(        int temp;) s
+5 381 M
+(        if \(done[n-i]\) temp = value[n-i];) s
+5 370 M
+(        else temp = cutRodRecursion1\(n - i\), done[n-i] = true, value[n-i] = temp;) s
+5 359 M
+(        maxval = max\(maxval, price[i] + temp\);) s
+5 348 M
+(    }) s
+5 337 M
+(    value[n] = maxval;) s
+5 326 M
+(    return value[n];) s
+5 315 M
+(}) s
+5 293 M
+(int cutRodRecursion2\(int n\) {) s
+5 282 M
+(    if \(done[n]\) return value[n];) s
+5 271 M
+(    done[n] = true;) s
+5 260 M
+(    if \(n <= 0\) return 0;) s
+5 249 M
+(    int maxval = INT_MIN;) s
+5 238 M
+(    for \(int i = 1; i <= n; ++i\) {) s
+5 227 M
+(        maxval = max\(maxval, price[i] + cutRodRecursion2\(n - i\)\);) s
+5 216 M
+(    }) s
+5 205 M
+(    value[n] = maxval;) s
+5 194 M
+(    return value[n];) s
+5 183 M
+(}) s
+5 161 M
+(int cutRodIterative\(int n\) {) s
+5 150 M
+(    int val[n+1];) s
+5 139 M
+(    val[0] = 0;) s
+5 128 M
+(    for \(int i = 1; i <= n; ++i\) {) s
+5 117 M
+(        int maxval = INT_MIN;) s
+5 106 M
+(        for \(int j = 1; j <= i; ++j\) {) s
+5 95 M
+(            maxval = max \(maxval, price[j] + val[i-j]\);) s
+5 84 M
+(        }) s
+5 73 M
+(        val[i] = maxval;) s
+5 62 M
+(    }) s
+5 51 M
+(    return val[n];) s
+5 40 M
+(}) s
+5 18 M
+(int main\(\) {) s
+5 7 M
+(//    freopen\("input", "r", stdin\);) s
+_R
+S
+%%Page: (2) 3
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 2 def
+/fname (Rod Cutting Problem #dynamicprogramming.cpp) def
+/fdir (.) def
+/ftail (Rod Cutting Problem #dynamicprogramming.cpp) def
+% User defined strings:
+/fmodstr (Sun Oct 28 13:36:26 2018) def
+/pagenumstr (2) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(    init\(\);) s
+5 755 M
+(    cout << cutRodRecursion1\(8\) << endl;) s
+5 744 M
+(    init\(\);) s
+5 733 M
+(    cout << cutRodRecursion2\(8\) << endl;) s
+5 722 M
+(    cout << cutRodIterative\(8\) << endl;) s
+5 700 M
+(    return 0;) s
+5 689 M
+(}) s
+_R
+S
+%%Page: (1) 4
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (segmented sieve PRIME1 - Prime Generator SPOJ #numbertheory.cpp) def
+/fdir (.) def
+/ftail (segmented sieve PRIME1 - Prime Generator SPOJ #numbertheory.cpp) def
+% User defined strings:
+/fmodstr (Sat Oct 27 19:03:55 2018) def
+/pagenumstr (1) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(/*) s
+5 755 M
+(    --> Segmented Sieve) s
+5 744 M
+(    This algorithm helps you find out all the prime numbers) s
+5 733 M
+(    with in a given range [a, b]) s
+5 722 M
+(    in this case the max value of b can be upto 10^9;) s
+5 711 M
+(    let's assume, sqrt\(10^9\) = 32000) s
+5 700 M
+(    therefore, MAX = 32000, you'll have to change vale of MAX) s
+5 689 M
+(    depending upon the value of b.) s
+5 678 M
+(*/) s
+5 656 M
+(#include <bits/stdc++.h>) s
+5 645 M
+(#include <iostream>) s
+5 634 M
+(#include <limits.h>) s
+5 623 M
+( ) s
+5 612 M
+(using namespace std;) s
+5 601 M
+( ) s
+5 590 M
+(using ll = long long;) s
+5 579 M
+( ) s
+5 568 M
+(#define MAX 32000) s
+5 557 M
+( ) s
+5 546 M
+(vector <int>* sieve\(\) {) s
+5 535 M
+(    bool isPrime[MAX];) s
+5 524 M
+(    for \(int i = 0; i < MAX; ++i\) isPrime[i] = true;) s
+5 513 M
+(    for \(int i = 3; i * i <= MAX; i += 2\) {) s
+5 502 M
+(        if \(isPrime[i]\) {) s
+5 491 M
+(            for \(int j = i * i; j <= MAX; j += i\) {) s
+5 480 M
+(                isPrime[j] = false;) s
+5 469 M
+(            }) s
+5 458 M
+(        }) s
+5 447 M
+(    }) s
+5 436 M
+(    vector <int>* primes = new vector<int> \(\);) s
+5 425 M
+(    primes->push_back\(2\);) s
+5 414 M
+(    for \(int i = 3; i < MAX; i += 2\) {) s
+5 403 M
+(        if \(isPrime[i]\) {) s
+5 392 M
+(            primes->push_back\(i\);) s
+5 381 M
+(        }) s
+5 370 M
+(    }) s
+5 359 M
+(    return primes;) s
+5 348 M
+(}) s
+5 337 M
+( ) s
+5 326 M
+(void printPrimes\(ll l, ll r, vector<int>* & primes\) {) s
+5 315 M
+(    bool isPrime[r-l+1];) s
+5 304 M
+(    for \(int i = 0; i < r-l+1; ++i\) isPrime[i] = true;) s
+5 293 M
+(    if \(l == 1\) isPrime[0] = false;) s
+5 282 M
+(    for \(int i = 0; primes->at\(i\)*\(ll\) primes->at\(i\) <= r; ++i\) {) s
+5 271 M
+(        int currPrime = primes->at\(i\);) s
+5 260 M
+(        ll base = \(l/currPrime\)*currPrime;) s
+5 249 M
+(        if \(base < l\) base += currPrime;) s
+5 238 M
+(        for \(ll j = base; j <= r; j += currPrime\) {) s
+5 227 M
+(            isPrime[j-l] = false;) s
+5 216 M
+(        }) s
+5 205 M
+(        if \(base == currPrime\) isPrime[base - l] = true;) s
+5 194 M
+(    }) s
+5 183 M
+(    for \(int i = 0; i < r - l + 1; ++i\) {) s
+5 172 M
+(        if \(isPrime[i]\) cout << \(i+l\) << endl;) s
+5 161 M
+(    }) s
+5 150 M
+(    puts\(""\);) s
+5 139 M
+(}) s
+5 128 M
+( ) s
+5 117 M
+(int main\(\) {) s
+5 106 M
+(    vector <int>* primes = sieve\(\);) s
+5 95 M
+(    int t;) s
+5 84 M
+(    cin >> t;) s
+5 73 M
+(    while \(t--\) {) s
+5 62 M
+(        ll l, r;) s
+5 51 M
+(        cin >> l >> r;) s
+5 40 M
+(        printPrimes\(l, r, primes\);) s
+5 29 M
+(    }) s
+5 18 M
+( ) s
+5 7 M
+(    return 0;) s
+_R
+S
+%%Page: (2) 5
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 2 def
+/fname (segmented sieve PRIME1 - Prime Generator SPOJ #numbertheory.cpp) def
+/fdir (.) def
+/ftail (segmented sieve PRIME1 - Prime Generator SPOJ #numbertheory.cpp) def
+% User defined strings:
+/fmodstr (Sat Oct 27 19:03:55 2018) def
+/pagenumstr (2) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(}) s
+_R
+S
+%%Page: (1) 6
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (sieve uisng bitest #numbertheory.cpp) def
+/fdir (.) def
+/ftail (sieve uisng bitest #numbertheory.cpp) def
+% User defined strings:
+/fmodstr (Sat Oct 27 19:04:06 2018) def
+/pagenumstr (1) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(/*) s
+5 755 M
+(        --> sieve) s
+5 744 M
+(*/) s
+5 733 M
+(#include <bits/stdc++.h>) s
+5 711 M
+(using namespace std;) s
+5 689 M
+(bitset<10000> bs;) s
+5 678 M
+(vector<int> primes;) s
+5 656 M
+(void sieve\(long long upper_bound\) {) s
+5 645 M
+(    bs.set\(\);) s
+5 634 M
+(    bs[0] = bs[1] = 0;) s
+5 623 M
+(    primes.push_back\(2\);) s
+5 612 M
+(    for\(long long i = 3; i <= upper_bound + 1; i += 2\) {) s
+5 601 M
+(        if\(bs[i]\) {) s
+5 590 M
+(            for\(long long j = i * i; j <= upper_bound + 1; j += i\)) s
+5 579 M
+(                bs[j] = 0;) s
+5 568 M
+(            primes.push_back\(\(int\) i\);) s
+5 557 M
+(        }) s
+5 546 M
+(    }) s
+5 535 M
+(}) s
+5 513 M
+(int main\(\) {) s
+5 502 M
+(    sieve\(1000\); ) s
+5 480 M
+(}) s
+_R
+S
+%%Page: (1) 7
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 1 def
+/fname (test.cpp) def
+/fdir (.) def
+/ftail (test.cpp) def
+% User defined strings:
+/fmodstr (Sun Oct 28 13:36:26 2018) def
+/pagenumstr (1) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(/*) s
+5 755 M
+( * Rod Cutting Problem : Dynamic Programming) s
+5 744 M
+( * Given a rod of length n and an array of prices that contains prices of all pieces of s) s
+5 733 M
+(ize smaller than n. Determine the maximum value obtainable by cutting up the rod and sell) s
+5 722 M
+(ing the pieces. For example, if length of the rod is 8 and the values of different pieces) s
+5 711 M
+( are given as following, then the maximum obtainable value is 22 \(by cutting in two piece) s
+5 700 M
+(s of lengths 2 and 6\)) s
+5 689 M
+(    length   | 1   2   3   4   5   6   7   8) s
+5 678 M
+(    --------------------------------------------) s
+5 667 M
+(    price    | 1   5   8   9  10  17  17  20) s
+5 645 M
+(    And if the prices are as following, then the maximum obtainable value is 24 \(by cutti) s
+5 634 M
+(ng in eight pieces of length 1\)) s
+5 612 M
+(    length   | 1   2   3   4   5   6   7   8) s
+5 601 M
+(    --------------------------------------------) s
+5 590 M
+(    price    | 3   5   8   9  10  17  17  20) s
+5 579 M
+( */) s
+5 568 M
+(#include <bits/stdc++.h>) s
+5 546 M
+(using namespace std;) s
+5 524 M
+(int price[9] = {0, 1, 5, 8, 9, 10, 17, 17, 20};) s
+5 513 M
+(bool done[9];) s
+5 502 M
+(int value[9];) s
+5 480 M
+(void init\(\) {) s
+5 469 M
+(    for \(int i = 0; i < 9; ++i\) done[i] = false, value[i] = 0;) s
+5 458 M
+(}) s
+5 436 M
+(int cutRodRecursion1\(int n\) {) s
+5 425 M
+(    if \(n <= 0\) return 0;) s
+5 414 M
+(    int maxval = INT_MIN;) s
+5 403 M
+(    for \(int i = 1; i <= n; ++i\) {) s
+5 392 M
+(        int temp;) s
+5 381 M
+(        if \(done[n-i]\) temp = value[n-i];) s
+5 370 M
+(        else temp = cutRodRecursion1\(n - i\), done[n-i] = true, value[n-i] = temp;) s
+5 359 M
+(        maxval = max\(maxval, price[i] + temp\);) s
+5 348 M
+(    }) s
+5 337 M
+(    value[n] = maxval;) s
+5 326 M
+(    return value[n];) s
+5 315 M
+(}) s
+5 293 M
+(int cutRodRecursion2\(int n\) {) s
+5 282 M
+(    if \(done[n]\) return value[n];) s
+5 271 M
+(    done[n] = true;) s
+5 260 M
+(    if \(n <= 0\) return 0;) s
+5 249 M
+(    int maxval = INT_MIN;) s
+5 238 M
+(    for \(int i = 1; i <= n; ++i\) {) s
+5 227 M
+(        maxval = max\(maxval, price[i] + cutRodRecursion2\(n - i\)\);) s
+5 216 M
+(    }) s
+5 205 M
+(    value[n] = maxval;) s
+5 194 M
+(    return value[n];) s
+5 183 M
+(}) s
+5 161 M
+(int cutRodIterative\(int n\) {) s
+5 150 M
+(    int val[n+1];) s
+5 139 M
+(    val[0] = 0;) s
+5 128 M
+(    for \(int i = 1; i <= n; ++i\) {) s
+5 117 M
+(        int maxval = INT_MIN;) s
+5 106 M
+(        for \(int j = 1; j <= i; ++j\) {) s
+5 95 M
+(            maxval = max \(maxval, price[j] + val[i-j]\);) s
+5 84 M
+(        }) s
+5 73 M
+(        val[i] = maxval;) s
+5 62 M
+(    }) s
+5 51 M
+(    return val[n];) s
+5 40 M
+(}) s
+5 18 M
+(int main\(\) {) s
+5 7 M
+(//    freopen\("input", "r", stdin\);) s
+_R
+S
+%%Page: (2) 8
+%%BeginPageSetup
+_S
+24 24 translate
+/pagenum 2 def
+/fname (test.cpp) def
+/fdir (.) def
+/ftail (test.cpp) def
+% User defined strings:
+/fmodstr (Sun Oct 28 13:36:26 2018) def
+/pagenumstr (2) def
+/user_header_p false def
+/user_footer_p false def
+%%EndPageSetup
+do_header
+5 766 M
+(    init\(\);) s
+5 755 M
+(    cout << cutRodRecursion1\(8\) << endl;) s
+5 744 M
+(    init\(\);) s
+5 733 M
+(    cout << cutRodRecursion2\(8\) << endl;) s
+5 722 M
+(    cout << cutRodIterative\(8\) << endl;) s
+5 700 M
+(    return 0;) s
+5 689 M
+(}) s
+_R
+S
+%%Trailer
+%%Pages: 8
+%%DocumentNeededResources: font Courier-Bold Courier 
+%%EOF
