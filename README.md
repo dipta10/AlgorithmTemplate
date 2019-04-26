@@ -1,6 +1,6 @@
 ### How to run the .md files:
 
-I've used markdown with MathJAX in all the md files.
+I've used Markdown with **MathJAX** in all these md files.
 
 To render it on browser you'll have to download and install this [Google Chrome](https://chrome.google.com/webstore/detail/mathjax-plugin-for-github/ioemnmodlmafdkllaclgeombjnmnbima/related?hl=en) Extension and it should look like the following. (It might be a little bit buggy, and it's not guaranteed to work always.)
 ![](/imgMD/img5.png)
