@@ -1,4 +1,6 @@
+ignore*.md
 logs/
 */logs/*
 logs/*
+logs/log.md
 
