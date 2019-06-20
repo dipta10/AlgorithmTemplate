@@ -9,49 +9,40 @@ That is, it is a spanning tree whose sum of edge weights is as small as possible
 * Only add edges which doesn't form a cycle , edges which connect only disconnected components. We will use **Disjoint Sets** here.
 
 ```cpp
-using namespace std;
 const int MAX = 1e4 + 5;
 int id[MAX], nodes, edges;
-pair <long long, pair<int, int> > p[MAX];
-// pair <cost, pair<u, v>> p[MAX]
-// we'll have to sort based on cost, and therefore this way of storing data
+vector<pair <long long, pair<int, int> >> adj;
 
-void initialize()
-{
+void initialize() {
     for(int i = 0;i < MAX;++i) id[i] = i;
-    // initially 'i' is the parent of itself.
 }
-
-int root(int x)
-{
-    while(id[x] != x)
-    {
+int root(int x) {
+    while(id[x] != x) {
         id[x] = id[id[x]];
         x = id[x];
     }
     return x;
 }
 
-void union1(int x, int y)
-{
+void union1(int x, int y) {
     int p = root(x);
     int q = root(y);
     id[p] = id[q];
 }
 
-long long kruskal(pair<long long, pair<int, int> > p[])
-{
+long long kruskal() {
+    initialize();
+    sort(adj.begin(), adj.end());
     int x, y;
     long long cost, minimumCost = 0;
+    // edges = (int) adj.size();
+
     for(int i = 0;i < edges;++i)
     {
-        // Selecting edges one by one in increasing order from the beginning
-        x = p[i].second.first;
-        y = p[i].second.second;
-        cost = p[i].first;
-        // Check if the selected edge is creating a cycle or not
-        if(root(x) != root(y))
-        {
+        x = adj[i].second.first;
+        y = adj[i].second.second;
+        cost = adj[i].first;
+        if(root(x) != root(y)) {
             minimumCost += cost;
             union1(x, y);
         }    
@@ -63,7 +54,6 @@ int main()
 {
     int x, y;
     long long weight, cost, minimumCost;
-    initialize();
     cin >> nodes >> edges;
     for(int i = 0;i < edges;++i)
     {
@@ -71,7 +61,6 @@ int main()
         p[i] = make_pair(weight, make_pair(x, y));
     }
     // Sort the edges in the ascending order
-    sort(p, p + edges);
     minimumCost = kruskal(p);
     cout << minimumCost << endl;
     return 0;
@@ -137,3 +126,5 @@ int main()
 > Time Complexity: The time complexity of the Prim’s Algorithm is $O((V+E)logV)$ because each vertex is inserted in the priority queue only once and insertion in priority queue take logarithmic time.
 
 > Use Case: Use Prim's algorithm when you have a graph with lots of edges.<br>For a graph with V vertices E edges, Kruskal's algorithm runs in $O(E log V)$ time and Prim's algorithm can run in $O(E + V log V)$ **amortized** time, if you use a **Fibonacci Heap**. <br>Prim's algorithm is significantly faster in the limit when you've got a really dense graph with many more edges than vertices. Kruskal performs better in typical situations (sparse graphs) because it uses simpler data structures.
+
+Now if I'm given a graph with N nodes and E edges, then is it possible to form a MST? MST is a minimum spanning tree, it's a tree, meaining there must be N-1 edges. If not then we can not build an MST. [LightOj](https://vjudge.net/contest/305942?fbclid=IwAR35XjWI1zZ8T8xccTJx62NzilQ6xZeikSJ3gxDzva1c33J0K8K1PXnv6ME#problem/F)
